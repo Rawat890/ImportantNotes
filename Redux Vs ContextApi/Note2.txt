@@ -1,0 +1,71 @@
+Difference between React Redux and the Context API
+
+         React Redux                                                              Context API
+      1. It is javascript bases library that is used as solution       1. It is injection mechanism that is used to pass the global variables
+      of state management problem in react application                 via the component tree
+      2. Used by professionals                                         2. Used by beginners
+      3. Used in complex projects with large data sets                 3. Used in small and moderate applications
+      4. There are 3 major components in React redux-                  4. Two main components that is Provider and consumer
+      Store, Action and Reducer                             
+      5. It uses a centralized approach for sharing the data           5. It uses the decentralized approach of sharing the data
+      and actions and reducer performs the modifications to state      
+      6. Provider is used to wrap all the components that want to      6. Context Provider is used as a container to wrap all the components
+      subscribe to the store
+      7. Debugging is quite easy as the state is managed at single     7. Debugging is easy as the state managed at particular file
+      store and state is read only
+      8. Dependency on the components is removed                       8. Same in this case
+
+      Both Redux and Context API can be used in combination where some part managed by Redux and some by context API
+
+      Steps to use Context API
+      1. Create a context object in separate file that will be used to manage the state
+      export const MyContext = createContext(' ');  //give initial state value
+      The function is used to create a new Context Object in react and it allows to share state between components those have the access, without passing the data manually.
+      This variable can be accessed anywhere in component tree
+      Default value is the value that is used when no Provider is found above the Component that consumes it
+
+      2. Create a Provider that will provide the access to the state to components
+      import {MyContext} from './MyContext'
+      import {useState} from 'react'
+
+      const App(){
+        const [text, setText]=useState('');
+        return(
+          <MyContext.Provider value={{text, setText}}>
+          <View>
+
+          //Consists of the component that have access to the state
+          <MyComponent1/>
+          <MyComponent2/>
+          <MyComponent3>
+
+          </View>          <
+          /MyContext.Provider>
+
+        )
+      }
+
+MyContext.Provider is a wrapper component provided by react Context API. It supplies value of context. It supplies the value of the context to any child components that need it. Here we are passing text and setText as the context value
+The context is being provided by object with properties of text and setText that is state updater function
+A context provider is necessary because it is used to pass the context value to all the child and if not used then the context would be empty or undefined when the component try to consume it
+
+3.Use Context in component
+import {MyContext} from './MyContext'
+import {useContext} from 'react'
+
+function MyComponent1(){
+  const {text, setText}=useContext(MyContext)
+  return (
+    <div>
+      <h1>{text}</h1>
+      <button onClick={() => setText('Hello, world!')}>
+        Click me
+      </button>
+    </div>
+  );
+}
+
+Advantages - no prop Drilling is required
+Coupling reduced, Nested components
+DisAdvantages - Testing is difficult, Errors get undetected
+

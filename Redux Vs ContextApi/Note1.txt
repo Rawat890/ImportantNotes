@@ -1,0 +1,77 @@
+import { createContext } from 'react';
+
+export const MyContext = createContext("");
+What is happening:
+
+createContext: This function is used to create a new Context object in React. It allows you to share state (or any other values) between components without having to pass props manually at each level.
+MyContext: This is the variable holding the context object created by createContext. It can be thought of as a "container" for a piece of state that can be accessed anywhere in the component tree where it's provided.
+"": This is the default value for the context. It's the value that will be used if no Provider is found above the component that consumes the context.
+Why:
+
+You create a context in a separate file to ensure modularity, reusability, and separation of concerns. It allows different parts of the application to easily access and modify the shared state.
+
+
+2. Create a Provider for the Context that you have created in step 1
+
+import { useState, React } from "react";
+import { MyContext } from "./MyContext";
+import MyComponent from "./MyComponent";
+
+function App() {
+  const [text, setText] = useState("");
+
+  return (
+    <div>
+      <MyContext.Provider value={{ text, setText }}> //Provider
+        <MyComponent /> //consumer
+      </MyContext.Provider>
+    </div>
+  );
+}
+
+export default App;
+What is happening:
+
+useState: This React hook is used to manage state in a functional component. Here, it's used to store a text value and a function setText to update that value.
+MyContext.Provider: This is a wrapper component provided by React’s Context API. It supplies the value of the context to any child components that need it. Here, you are passing the text and setText values as the context's value.
+value={{ text, setText }}: The context is being provided with an object that contains the state (text) and the state updater function (setText).
+Why:
+
+A Context Provider is necessary to make the context's value available to all the components nested inside it. Without a Provider, the context would be empty or undefined when a component tries to consume it.
+3. Use the Context in your React component
+js
+Copy code
+import { useContext } from 'react';
+import { MyContext } from './MyContext';
+
+function MyComponent() {
+  const { text, setText } = useContext(MyContext);
+
+  return (
+    <div>
+      <h1>{text}</h1>
+      <button onClick={() => setText('Hello, world!')}>
+        Click me
+      </button>
+    </div>
+  );
+}
+
+export default MyComponent;
+What is happening:
+
+useContext(MyContext): This is a React hook that allows a component to "consume" the context. When you call useContext(MyContext), React will look for the nearest MyContext.Provider above the component in the component tree and give you the value provided by that Provider (in this case, the text and setText values).
+{ text, setText }: This destructures the context value that was provided by MyContext.Provider. Now, text holds the current value of the state, and setText is the function that updates that state.
+The Button: When clicked, the button calls setText('Hello, world!'), updating the context value and causing any component that consumes this context (like MyComponent) to re-render with the new value.
+Why:
+
+The useContext hook allows you to easily access shared state across components. This simplifies prop-drilling, where you don't need to pass props down through many levels of components. Instead, any component that calls useContext can access the shared context data, making your code cleaner and more maintainable.
+Summary of why each step is done:
+Create a Context: You need a way to share state across different components without manually passing props down through the component tree. A context provides a global value that can be consumed anywhere in your app.
+Create a Provider: The Provider makes the context value available to all child components. This is crucial because without it, no component would be able to access the context.
+Use the Context: Using the context in a component lets you access the shared state directly, avoiding the need to pass state through props and enabling global state management in a clean way.
+This pattern is particularly useful for managing global state, themes, user authentication, language settings, and more in a React application.
+
+
+
+

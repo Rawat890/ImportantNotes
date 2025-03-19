@@ -1,0 +1,57 @@
+What are the effects in redux saga-
+1. call - this effect waits for the promise to get completed . Takes function as an argument that returns a promise
+2. fork - starts a new task, can take an function as argument
+3. put - dispatches actions according to result of async operations
+4. take - wait for an action or event to occur
+5. select - takes data from state and accepts a function that takes state as argument
+
+Generator function is the function that has the ability to pause and resume the function and are generally and perfect to handle the asynchronous operations
+function * Generator_function(){//code}
+uses yield keyword to pause the execution
+const Generator= Generator_function() //returns a object
+clg(Generator.next().value)
+clg(Generator.next())     // returns  object { value and done }
+
+React Thunk is a middleware that allows us to write action creators that returns a function instead of the action object and that function can be impure
+React Saga is a middleware that uses Generator function to write redux logic
+
+Steps - react redux
+1. create action type
+2. Initial action object
+3. action creator
+4. Reducer function
+5. Switch case handling
+6. Updating
+7. Unsubscribing
+
+immer library is a library that allows to handle the nested state efficiently, keep the track of the state and the attempts to update it
+
+We do not have to explicitly return new state
+createSlice(name of slice, initialState, reducer:{consists of reducer function})
+It take care of creating action type, action creators, switch case handling and immutable updates
+
+const fetchUsers = createAsyncThunk(action.type, ()=>{
+  return axios.get(url)
+})
+
+const userSlice = createSlice(name:'user', initialState, extraReducers:builders=>{
+  builders.addCase(fetchUsers.pending, (state)=>{
+    state.loading:true
+  }),
+  builders.addCase(fetchUsers.fulfilled, (state)=>{
+    state.loading:false,
+    users:action.payload,
+    state.error:''
+  }),
+  builders.addCase(fetchUsers.rejected, (state)=>{
+    state.loading:false,
+    users:[],
+    state.error:action.error
+  }),
+})
+
+call - waits for the promise to fulfilled,takes function as arg that returns promise
+fork - set new task initiation,
+take and select
+
+take latest- does not allow to fire multiple sagas concurrently
